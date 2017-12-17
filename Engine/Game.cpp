@@ -20,11 +20,21 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
+#include "Colors.h"
+#include "Snake.h"
 
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
-	gfx( wnd )
+	gfx( wnd ),
+	rng( std::random_device()() ),
+	frame_time(std::chrono::steady_clock::now()),
+	brd ( gfx ),
+	snake(brd,rng),
+	xAppleDist( 0, brd.GetWidth() -1 ),
+	yAppleDist(0, brd.GetHeight() - 1),
+	apple(brd, {xAppleDist(rng),yAppleDist(rng) }, rng)
+	
 {
 }
 
@@ -38,8 +48,46 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	snake.Update();
+	snake.Control(wnd);
+	snake.testCollision(true);
+	if (snake.testCollision(brd))
+	{
+		snake.Respawn(true);
+	}
+	if (snake.testCollision(apple))
+	{
+		snake.Grow();
+		apple.Respawn();
+	}
 }
 
 void Game::ComposeFrame()
 {
+	brd.DrawBorder();
+	apple.Draw();
+	snake.Draw();
+	ShowFPS();
+}
+
+void Game::ShowFPS()
+{
+	std::chrono::duration<float> _frame_time = std::chrono::steady_clock::now() - frame_time;
+	int time_frame = int(_frame_time.count()*1000);
+	int fps = int(1 / _frame_time.count());
+	frame_time = std::chrono::steady_clock::now();
+	int i = 0;
+	while ((fps != 0) && (i > -790))
+	{
+		i -= 15;;
+		gfx.PrintDigit(fps % 10, 790 + i, 10, 4, { 255,146,50 });
+		fps /= 10;
+	}
+	i = 0;
+	while ((time_frame != 0) && (i > -790))
+	{
+		i -= 8;;
+		gfx.PrintDigit(time_frame % 10, 790 + i, 40, 2, Colors::Green);
+		time_frame /= 10;
+	}
 }

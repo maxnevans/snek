@@ -23,6 +23,11 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
+#include <chrono>
+#include <random>
+#include "Board.h"
+#include "Snake.h"
+#include "Apple.h"
 
 class Game
 {
@@ -36,6 +41,7 @@ private:
 	void UpdateModel();
 	/********************************/
 	/*  User Functions              */
+	void ShowFPS();
 	/********************************/
 private:
 	MainWindow& wnd;
@@ -43,4 +49,10 @@ private:
 	/********************************/
 	/*  User Variables              */
 	/********************************/
+	std::chrono::steady_clock::time_point frame_time;
+	std::mt19937 rng;
+	Board brd;
+	std::uniform_int_distribution<int> xAppleDist , yAppleDist;
+	Snake snake;	
+	Apple apple;
 };

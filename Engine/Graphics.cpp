@@ -309,11 +309,211 @@ void Graphics::BeginFrame()
 
 void Graphics::PutPixel( int x,int y,Color c )
 {
-	assert( x >= 0 );
-	assert( x < int( Graphics::ScreenWidth ) );
-	assert( y >= 0 );
-	assert( y < int( Graphics::ScreenHeight ) );
+	assert(x >= 0);
+	assert(x < int(Graphics::ScreenWidth));
+	assert(y >= 0);
+	assert(y < int(Graphics::ScreenHeight));
 	pSysBuffer[Graphics::ScreenWidth * y + x] = c;
+}
+
+void Graphics::DrawRect(int x, int y, int width, int height, Color c)
+{
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			PutPixel(x+i,y+j,c);
+		}
+	}
+}
+
+void Graphics::PrintDigit(int source, int x, int y, int size, Color c)
+{
+	const int width = 3;
+	const int height = 5;
+	switch (source)
+	{
+	case 0:
+		for (int i = 0; i < size*width; i++)
+		{
+			for (int j = 0; j < size; j++)
+			{
+				PutPixel(x + i, y + j, c);
+				PutPixel(x + i, y + j + (height-1)*size, c);
+			}
+		}
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = size; j < size*(height - 1); j++)
+			{
+				PutPixel(x + i, y + j, c);
+				PutPixel(x + i + size*(width - 1), y + j, c);
+			}
+		}
+		break;
+	case 1:
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = 0; j < size*height; j++)
+			{
+				PutPixel(x + i + size*(width - 1), y + j, c);
+			}
+		}
+		break;
+	case 2:
+		for (int i = 0; i < size*width; i++)
+		{
+			for (int j = 0; j < size; j++)
+			{
+				PutPixel(x + i, y + j, c);
+				PutPixel(x + i, y + j + (height - 1 - height / 2)*size, c);
+				PutPixel(x + i, y + j + (height - 1)*size, c);
+			}
+		}
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = size; j < size*(height - 1); j++)
+			{
+				if (j > size*height/2)
+					PutPixel(x + i, y + j, c);
+				else
+					PutPixel(x + i + size*(width - 1), y + j, c);
+			}
+		}
+		break;
+	case 3:
+		for (int i = 0; i < size*width; i++)
+		{
+			for (int j = 0; j < size; j++)
+			{
+				PutPixel(x + i, y + j, c);
+				PutPixel(x + i, y + j + (height - 1 - height / 2)*size, c);
+				PutPixel(x + i, y + j + (height - 1)*size, c);
+			}
+		}
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = size; j < size*(height - 1); j++)
+			{
+				PutPixel(x + i + size*(width - 1), y + j, c);
+			}
+		}
+		break;
+	case 4:
+		for (int i = 0; i < size*width; i++)
+		{
+			for (int j = 0; j < size; j++)
+			{
+				PutPixel(x + i, y + j + (height - 1 - height / 2)*size, c);
+			}
+		}
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = 0; j < size*height; j++)
+			{
+				if (j < size*height / 2)
+					PutPixel(x + i, y + j, c);
+				PutPixel(x + i + size*(width - 1), y + j, c);
+			}
+		}
+		break;
+	case 5:
+		for (int i = 0; i < size*width; i++)
+		{
+			for (int j = 0; j < size; j++)
+			{
+				PutPixel(x + i, y + j, c);
+				PutPixel(x + i, y + j + (height - 1 - height / 2)*size, c);
+				PutPixel(x + i, y + j + (height - 1)*size, c);
+			}
+		}
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = size; j < size*(height - 1); j++)
+			{
+				if (j < size*height / 2)
+					PutPixel(x + i, y + j, c);
+				else
+					PutPixel(x + i + size*(width - 1), y + j, c);
+			}
+		}
+		break;
+	case 6:
+		for (int i = 0; i < size*width; i++)
+		{
+			for (int j = 0; j < size; j++)
+			{
+				PutPixel(x + i, y + j, c);
+				PutPixel(x + i, y + j + (height - 1 - height / 2)*size, c);
+				PutPixel(x + i, y + j + (height - 1)*size, c);
+			}
+		}
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = size; j < size*(height - 1); j++)
+			{
+				if (j > size*height / 2)
+					PutPixel(x + i + size*(width - 1), y + j, c);
+				PutPixel(x + i, y + j, c);
+			}
+		}
+		break;
+	case 7:
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = 0; j < size*height; j++)
+			{
+				PutPixel(x + i + size*(width - 1), y + j, c);
+			}
+		}
+		for (int i = 0; i < size*width; i++)
+		{
+			for (int j = 0; j < size; j++)
+			{
+				PutPixel(x + i, y + j, c);
+			}
+		}
+		break;
+	case 8:
+		for (int i = 0; i < size*width; i++)
+		{
+			for (int j = 0; j < size; j++)
+			{
+				PutPixel(x + i, y + j, c);
+				PutPixel(x + i, y + j + (height - 1 - height/2)*size, c);
+				PutPixel(x + i, y + j + (height - 1)*size, c);
+			}
+		}
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = size; j < size*(height - 1); j++)
+			{
+				PutPixel(x + i, y + j, c);
+				PutPixel(x + i + size*(width - 1), y + j, c);
+			}
+		}
+		break;
+	case 9:
+		for (int i = 0; i < size*width; i++)
+		{
+			for (int j = 0; j < size; j++)
+			{
+				PutPixel(x + i, y + j, c);
+				PutPixel(x + i, y + j + (height - 1 - height / 2)*size, c);
+				PutPixel(x + i, y + j + (height - 1)*size, c);
+			}
+		}
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = size; j < size*(height - 1); j++)
+			{
+				if (j < size*height / 2)
+					PutPixel(x + i, y + j, c);
+				PutPixel(x + i + size*(width - 1), y + j, c);
+			}
+		}
+		break;
+	};
 }
 
 
