@@ -89,10 +89,8 @@ void Snake::Draw() const
 	for (int i = (int)snake.size() - 1; i > 0; i--)
 	{
 		brd.Draw(snake[i].loc, snake[i].c, 2);
-		brd.SetObj(snake[i].loc, Board::Object::Snake);
 	}
 	brd.Draw(snake.front().loc, snake[0].c);
-	brd.SetObj(snake.front().loc, Board::Object::Snake);
 }
 
 void Snake::Grow()
@@ -112,11 +110,14 @@ void Snake::Update()
 	if (speed*rate > 1)
 	{
 		Snake::UpdateDelta();
+		brd.SetObj(snake.back().loc, Board::Object::Empty);
 		for (int i = (int)snake.size() - 1; i > 0; i--)
 		{
 			snake[i].loc = snake[i - 1].loc;
+			brd.SetObj(snake[i].loc, Board::Object::Snake);
 		}
 		snake.front().loc += delta;
+		brd.SetObj(snake.front().loc, Board::Object::Snake);
 		update_rate = std::chrono::steady_clock::now();
 		distance++;
 	}
