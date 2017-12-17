@@ -54,30 +54,34 @@ void Game::UpdateModel()
 
 		if (!snake.onBoard())
 		{
-			snake.Respawn(true);
-		}
-
-		switch (snake.testCollision())
-		{
-		case Board::Cell::Apple:
-			snake.Grow();
-			brd.RespawnObject(snake.GetCurrentLocation());
-			break;
-		case Board::Cell::Obstacle:
 			gameOver = true;
-			break;
-		case Board::Cell::Poison:
-			snake.SpeedUp(poison_acceleration_ratio);
-			brd.RespawnObject(snake.GetCurrentLocation());
-			break;
-		case Board::Cell::Snake:
-			snake.EatYourself();
-			break;
 		}
-		snake.Pass();
+		else
+		{
+			switch (snake.testCollision())
+			{
+			case Board::Cell::Apple:
+				snake.Grow();
+				score++;
+				brd.RespawnObject(snake.GetCurrentLocation());
+				break;
+			case Board::Cell::Obstacle:
+				gameOver = true;
+				break;
+			case Board::Cell::Poison:
+				snake.SpeedUp(poison_acceleration_ratio);
+				brd.RespawnObject(snake.GetCurrentLocation());
+				break;
+			case Board::Cell::Snake:
+				snake.EatYourself();
+				break;
+			}
+			snake.Pass();
+		}
 	}
 	else if (wnd.kbd.KeyIsPressed('R'))
 	{
+		score = 0;
 		gameOver = false;
 		snake.Respawn();
 		brd.Respawn();
@@ -88,6 +92,7 @@ void Game::ComposeFrame()
 {
 	brd.DrawBorder();
 	brd.Draw();
+	PrintScore(40,0);
 	ShowFPS();
 }
 
@@ -110,5 +115,21 @@ void Game::ShowFPS()
 		i -= 8;;
 		gfx.PrintDigit(time_frame % 10, 790 + i, 40, 2, Colors::Green);
 		time_frame /= 10;
+	}
+}
+
+void Game::PrintScore(const int x, const int y)
+{
+	int i = 0;
+	int buff = score;
+	if (buff == 0)
+	{
+		gfx.PrintDigit(buff, x + i, y + 10, 4, { 255,255,255 });
+	}
+	while ((buff != 0))
+	{
+		i -= 15;;
+		gfx.PrintDigit(buff % 10, x + i, y + 10, 4, { 255,255,255 });
+		buff /= 10;
 	}
 }

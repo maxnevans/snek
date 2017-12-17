@@ -38,16 +38,16 @@ public:
 	const Cell& EmptyCell() const;
 private:
 	static constexpr int width = 39;
-	static constexpr int height = 29;
+	static constexpr int height = 27;
 	static constexpr Color borderColor = { 80,156,171 };
 	static constexpr int borderPadding = 2;
 	static constexpr int borderThickness = 5;
 	static constexpr int leftPadding = 3;
-	static constexpr int topPadding = 3;
+	static constexpr int topPadding = 43;
 	static constexpr int dim = 20;
 	static constexpr Color contentsColors[] = {{ 214,17,73 },
 											   { 166,177,184 },
-											   { 144,97,184 }};
+											   { 78,0,104 }};
 	static constexpr int contentsPadding[] = {0 , 0 , 0};
 	static constexpr Cell empty_cell = { Cell::Empty, NULL, NULL };
 	std::vector<int> amount_objects;
