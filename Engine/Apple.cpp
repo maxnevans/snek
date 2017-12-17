@@ -30,6 +30,7 @@ void Apple::Respawn()
 
 void Apple::Relocate(const Location& loc)
 {
+	brd.SetObj(this->loc, Board::Object::Empty);
 	this->loc = loc;
 }
 

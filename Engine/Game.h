@@ -28,6 +28,7 @@
 #include "Board.h"
 #include "Snake.h"
 #include "Apple.h"
+#include <vector>
 
 class Game
 {
@@ -54,5 +55,5 @@ private:
 	std::uniform_int_distribution<int> xAppleDist, yAppleDist;
 	Board brd;
 	Snake snake;	
-	Apple apple;
+	std::vector<Apple> apples;
 };

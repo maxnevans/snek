@@ -33,8 +33,7 @@ Game::Game( MainWindow& wnd )
 	snake(brd,rng),
 	xAppleDist( 0, brd.GetWidth() -1 ),
 	yAppleDist(0, brd.GetHeight() - 1),
-	apple(brd, {xAppleDist(rng),yAppleDist(rng) }, rng)
-	
+	apples(3, { brd,{ xAppleDist(rng),yAppleDist(rng) }, rng })
 {
 }
 
@@ -50,22 +49,31 @@ void Game::UpdateModel()
 {
 	snake.Update();
 	snake.Control(wnd);
-	snake.testCollision(true);
-	if (snake.testCollision(brd))
+	if (snake.testCollisionSnake())
+	{
+		snake.EatYourself();
+	}
+	if (snake.testCollisionBoard())
 	{
 		snake.Respawn(true);
 	}
-	if (snake.testCollision(apple))
+	if (snake.testCollisionApple())
 	{
 		snake.Grow();
-		apple.Respawn();
+		for (Apple& apple : apples)
+		{
+			apple.Respawn();
+		}
 	}
 }
 
 void Game::ComposeFrame()
 {
 	brd.DrawBorder();
-	apple.Draw();
+	for (const Apple& apple:apples)
+	{
+		apple.Draw();
+	}
 	snake.Draw();
 	ShowFPS();
 }

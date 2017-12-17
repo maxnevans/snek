@@ -28,18 +28,18 @@ public:
 	void Control(MainWindow& wnd);
 	void Update();
 	void Draw() const;
-	void testCollision(const bool Eat = false);
-	bool testCollision(const Apple& apple) const;
-	bool testCollision(const Board& brd) const;
+	bool testCollisionSnake() const;
+	bool testCollisionBoard() const;
+	bool testCollisionApple() const;
 	void Respawn(const bool rand_pos);
 	void Grow();
+	void EatYourself();
 private:
 	void UpdateDelta();
 	void InitializeTail();
 	void InitializeHead(const Location& loc);
 	void InitializeSnake(const Location& loc = start_location);
-	int isOnTheTail() const;
-	void EatYourself(const int wasEaten);
+	bool isOnTheTail() const;
 private:
 	static constexpr Location start_location = {0,0};
 	static constexpr Direction start_direction = dirRight;

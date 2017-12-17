@@ -22,7 +22,7 @@ void Snake::InitializeTail()
 	std::uniform_int_distribution<int> colorDistG(100, 175);
 	for (int i = 1; i < snake.size(); i++)
 	{
-		snake[i].loc = snake[0].loc;
+		snake[i].loc = snake.front().loc;
 		Color _temp(0, colorDistG(rng), 0);
 		snake[i].c = _temp;
 	}
@@ -30,8 +30,8 @@ void Snake::InitializeTail()
 
 void Snake::InitializeHead(const Location& loc)
 {
-	snake[0].c = start_head_color;
-	snake[0].loc = loc;
+	snake.front().c = start_head_color;
+	snake.front().loc = loc;
 }
 
 void Snake::InitializeSnake(const Location& loc)
@@ -91,8 +91,8 @@ void Snake::Draw() const
 		brd.Draw(snake[i].loc, snake[i].c, 2);
 		brd.SetObj(snake[i].loc, Board::Object::Snake);
 	}
-	brd.Draw(snake[0].loc, snake[0].c);
-	brd.SetObj(snake[0].loc, Board::Object::Snake);
+	brd.Draw(snake.front().loc, snake[0].c);
+	brd.SetObj(snake.front().loc, Board::Object::Snake);
 }
 
 void Snake::Grow()
@@ -116,7 +116,7 @@ void Snake::Update()
 		{
 			snake[i].loc = snake[i - 1].loc;
 		}
-		snake[0].loc += delta;
+		snake.front().loc += delta;
 		update_rate = std::chrono::steady_clock::now();
 		distance++;
 	}
@@ -144,40 +144,44 @@ void Snake::Respawn(const bool rand_pos)
 	distance = 0;
 }
 
-bool Snake::testCollision(const Board& brd) const
+bool Snake::testCollisionBoard() const
 {
-	return  !((snake[0].loc.x >= 0) &&
-		(snake[0].loc.x < brd.GetWidth()) &&
-		(snake[0].loc.y >= 0) &&
-		(snake[0].loc.y < brd.GetHeight()));
+	return  !((snake.front().loc.x >= 0) &&
+		(snake.front().loc.x < brd.GetWidth()) &&
+		(snake.front().loc.y >= 0) &&
+		(snake.front().loc.y < brd.GetHeight()));
 }
 
-void Snake::testCollision(const bool eat)
+bool Snake::testCollisionSnake() const
 {	
-	int wasEaten = isOnTheTail();
-	if (wasEaten && (distance > snake.size() - 1) && eat)
-	{
-		EatYourself(wasEaten);
-	}
+	return (isOnTheTail() && (distance > snake.size() - 1));
 }
 
-void Snake::EatYourself(const int wasEaten)
+bool Snake::testCollisionApple() const
 {
-	snake.resize(wasEaten);
+	return  brd.testLocation(snake.front().loc) == Board::Apple;
 }
 
-bool Snake::testCollision(const Apple& apple) const
-{
-	return  apple.GetLocation() == snake[0].loc;
-}
-
-int Snake::isOnTheTail() const
+void Snake::EatYourself()
 {
 	for (int i = 1; i < snake.size(); i++)
 	{
-		if (snake[0].loc == snake[i].loc)
+		if (snake.front().loc == snake[i].loc)
 		{
-			return i;
+			snake.resize(i);
+			return;
+		}
+	}
+	
+}
+
+bool Snake::isOnTheTail() const
+{
+	for (int i = 1; i < snake.size(); i++)
+	{
+		if (snake.front().loc == snake[i].loc)
+		{
+			return true;
 		}
 	}
 	return false;
