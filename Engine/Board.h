@@ -15,6 +15,7 @@ public:
 			Apple,
 			Obstacle,
 			Poison,
+			size,
 			Snake,
 			Empty
 		};
@@ -33,6 +34,8 @@ public:
 	int GetWidth() const;
 	int GetHeight() const;
 	const Cell::Object& testLocation(const Location& loc) const;
+	void Respawn();
+	const Cell& EmptyCell() const;
 private:
 	static constexpr int width = 39;
 	static constexpr int height = 29;
@@ -42,12 +45,12 @@ private:
 	static constexpr int leftPadding = 3;
 	static constexpr int topPadding = 3;
 	static constexpr int dim = 20;
-	static constexpr int applePaddingDraw = 0;
 	static constexpr Color contentsColors[] = {{ 214,17,73 },
 											   { 166,177,184 },
 											   { 144,97,184 }};
 	static constexpr int contentsPadding[] = {0 , 0 , 0};
-
+	static constexpr Cell empty_cell = { Cell::Empty, NULL, NULL };
+	std::vector<int> amount_objects;
 	Graphics& gfx;
 	std::mt19937& rng;
 	std::vector<Cell> board;

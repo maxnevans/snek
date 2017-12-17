@@ -103,7 +103,7 @@ void Snake::Update()
 	if (speed*rate > 1)
 	{
 		Snake::UpdateDelta();
-		brd.SetObj(snake.back().loc, { Board::Cell::Object::Empty, NULL, NULL });
+		brd.SetObj(snake.back().loc, brd.EmptyCell());
 		for (int i = (int)snake.size() - 1; i > 0; i--)
 		{
 			snake[i].loc = snake[i - 1].loc;
@@ -193,7 +193,7 @@ void Snake::CleanTrack() const
 {
 	for (const Segment& s : snake)
 	{
-		brd.SetObj(s.loc, {Board::Cell::Object::Empty, NULL, NULL});
+		brd.SetObj(s.loc, brd.EmptyCell());
 	}
 }\
 

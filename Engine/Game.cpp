@@ -79,6 +79,8 @@ void Game::UpdateModel()
 	else if (wnd.kbd.KeyIsPressed('R'))
 	{
 		gameOver = false;
+		snake.Respawn();
+		brd.Respawn();
 	}
 }
 

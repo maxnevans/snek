@@ -5,7 +5,8 @@ Board::Board(Graphics& gfx, std::mt19937& rng)
 	:
 	gfx( gfx),
 	rng(rng),
-	board(width*height, { Cell::Empty, NULL, NULL })
+	board(width*height, empty_cell),
+	amount_objects(Board::Cell::Object::size)
 {
 }
 
@@ -71,6 +72,7 @@ void Board::SetObj(const Location& loc, const Board::Cell& obj)
 
 void Board::SpawnObjects(const Board::Cell::Object& what,const int howMany)
 {
+	amount_objects[what] = howMany;
 	for (int i = 0; i < howMany; i++)
 	{
 		Location _temp_loc;
@@ -100,6 +102,7 @@ bool Board::SpawnObject(const Board::Cell::Object& what, const Location& loc)
 	}
 	else
 	{
+		amount_objects[what]++;
 		board[loc.y*width + loc.x].col = contentsColors[what];
 		board[loc.y*width + loc.x].obj = what;
 		board[loc.y*width + loc.x].padding = contentsPadding[what];
@@ -137,4 +140,21 @@ bool Board::RespawnObject(const Location& loc)
 		board[loc.y*width + loc.x].padding = NULL;
 		return true;
 	}
+}
+
+void Board::Respawn()
+{
+	for (Cell& c : board)
+	{
+		c = empty_cell;
+	}
+	for (int obj = Cell::Object::Apple; obj < Cell::Object::size; obj++ )
+	{
+		SpawnObjects(static_cast<Cell::Object> (obj), amount_objects[obj]);
+	}
+}
+
+const Board::Cell& Board::EmptyCell() const
+{
+	return empty_cell;
 }
