@@ -27,7 +27,6 @@
 #include <random>
 #include "Board.h"
 #include "Snake.h"
-#include "Apple.h"
 #include <vector>
 
 class Game
@@ -42,8 +41,8 @@ private:
 	void UpdateModel();
 	/********************************/
 	/*  User Functions              */
-	void ShowFPS();
 	/********************************/
+	void ShowFPS();
 private:
 	MainWindow& wnd;
 	Graphics gfx;
@@ -51,9 +50,12 @@ private:
 	/*  User Variables              */
 	/********************************/
 	std::chrono::steady_clock::time_point frame_time;
+	static constexpr int amount_apples = 3;
+	static constexpr int amount_obstacles = 5;
+	static constexpr int amount_poison = 100;
+	static constexpr float poison_acceleration_ratio = 0.5f;
+	bool gameOver = false;
 	std::mt19937 rng;
-	std::uniform_int_distribution<int> xAppleDist, yAppleDist;
 	Board brd;
 	Snake snake;	
-	std::vector<Apple> apples;
 };

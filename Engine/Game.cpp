@@ -29,12 +29,12 @@ Game::Game( MainWindow& wnd )
 	gfx( wnd ),
 	rng( std::random_device()() ),
 	frame_time(std::chrono::steady_clock::now()),
-	brd ( gfx ),
-	snake(brd,rng),
-	xAppleDist( 0, brd.GetWidth() -1 ),
-	yAppleDist(0, brd.GetHeight() - 1),
-	apples(3, { brd,{ xAppleDist(rng),yAppleDist(rng) }, rng })
+	brd ( gfx, rng ),
+	snake(brd,rng)
 {
+	brd.SpawnObjects(Board::Cell::Apple, amount_apples);
+	brd.SpawnObjects(Board::Cell::Obstacle, amount_obstacles);
+	brd.SpawnObjects(Board::Cell::Poison, amount_poison);
 }
 
 void Game::Go()
@@ -47,34 +47,45 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	snake.Update();
-	snake.Control(wnd);
-	if (snake.testCollisionSnake())
+	if (!gameOver)
 	{
-		snake.EatYourself();
-	}
-	if (snake.testCollisionBoard())
-	{
-		snake.Respawn(true);
-	}
-	if (snake.testCollisionApple())
-	{
-		snake.Grow();
-		for (Apple& apple : apples)
+		snake.Control(wnd);
+		snake.Update();
+
+		if (!snake.onBoard())
 		{
-			apple.Respawn();
+			snake.Respawn(true);
 		}
+
+		switch (snake.testCollision())
+		{
+		case Board::Cell::Apple:
+			snake.Grow();
+			brd.RespawnObject(snake.GetCurrentLocation());
+			break;
+		case Board::Cell::Obstacle:
+			gameOver = true;
+			break;
+		case Board::Cell::Poison:
+			snake.SpeedUp(poison_acceleration_ratio);
+			brd.RespawnObject(snake.GetCurrentLocation());
+			break;
+		case Board::Cell::Snake:
+			snake.EatYourself();
+			break;
+		}
+		snake.Pass();
+	}
+	else if (wnd.kbd.KeyIsPressed('R'))
+	{
+		gameOver = false;
 	}
 }
 
 void Game::ComposeFrame()
 {
 	brd.DrawBorder();
-	for (const Apple& apple:apples)
-	{
-		apple.Draw();
-	}
-	snake.Draw();
+	brd.Draw();
 	ShowFPS();
 }
 

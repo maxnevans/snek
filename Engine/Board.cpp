@@ -1,10 +1,11 @@
 #include "Board.h"
 #include <assert.h>
 
-Board::Board(Graphics& gfx)
+Board::Board(Graphics& gfx, std::mt19937& rng)
 	:
 	gfx( gfx),
-	board(width*height, Empty)
+	rng(rng),
+	board(width*height, { Cell::Empty, NULL, NULL })
 {
 }
 
@@ -18,9 +19,9 @@ int Board::GetHeight() const
 	return height;
 }
 
-const Board::Object& Board::testLocation(const Location & loc) const
+const Board::Cell::Object& Board::testLocation(const Location & loc) const
 {
-	return board[loc.y*width + loc.x];
+	return board[loc.y*width + loc.x].obj;
 }
 
 void Board::DrawBorder() const
@@ -43,18 +44,23 @@ void Board::DrawBorder() const
 	}
 }
 
-void Board::Draw( const Location& loc, const Color& col, const int padding) const
+void Board::Draw( ) const
 {
-	assert(loc.x >= 0);
-	assert(loc.x < width);
-	assert(loc.y >= 0);
-	assert(loc.y < height);
-
+	for (int c = 0; c < board.size(); c++)
+	{ 
+		if (board[c].obj != Board::Cell::Object::Empty)
+		{
+			int x = c % width;
+			int y = c / width;
+			gfx.DrawRect(x*dim + leftPadding + borderThickness + borderPadding + board[c].padding,
+				y*dim + topPadding + borderThickness + borderPadding + board[c].padding, dim - board[c].padding * 2,
+				dim - board[c].padding * 2, board[c].col);
+		}
+	}
 	
-	gfx.DrawRect(loc.x*dim + leftPadding + borderThickness+ borderPadding + padding, loc.y*dim + topPadding + borderThickness + borderPadding + padding, dim - padding * 2, dim - padding * 2, col);
 }
 
-void Board::SetObj(const Location& loc, const Board::Object& obj)
+void Board::SetObj(const Location& loc, const Board::Cell& obj)
 {
 	assert(loc.x >= 0);
 	assert(loc.x < width);
@@ -63,3 +69,72 @@ void Board::SetObj(const Location& loc, const Board::Object& obj)
 	board[loc.y*width + loc.x] = obj;
 }
 
+void Board::SpawnObjects(const Board::Cell::Object& what,const int howMany)
+{
+	for (int i = 0; i < howMany; i++)
+	{
+		Location _temp_loc;
+		do
+		{
+			std::uniform_int_distribution<int> xDist(0, width - 1);
+			std::uniform_int_distribution<int> yDist(0, height - 1);
+
+			_temp_loc = { xDist(rng), yDist(rng) };
+			
+		} while (board[_temp_loc.y*width + _temp_loc.x].obj != Cell::Empty );
+		board[_temp_loc.y*width + _temp_loc.x].col = contentsColors[what];
+		board[_temp_loc.y*width + _temp_loc.x].obj = what;
+		board[_temp_loc.y*width + _temp_loc.x].padding = 0;
+	}
+}
+
+bool Board::SpawnObject(const Board::Cell::Object& what, const Location& loc)
+{
+	assert(loc.x >= 0);
+	assert(loc.x < width);
+	assert(loc.y >= 0);
+	assert(loc.y < height);
+	if (board[loc.y* width + loc.x].obj != Board::Cell::Empty)
+	{
+		return false;
+	}
+	else
+	{
+		board[loc.y*width + loc.x].col = contentsColors[what];
+		board[loc.y*width + loc.x].obj = what;
+		board[loc.y*width + loc.x].padding = contentsPadding[what];
+		return true;
+	}
+}
+
+bool Board::RespawnObject(const Location& loc)
+{
+	assert(loc.x >= 0);
+	assert(loc.x < width);
+	assert(loc.y >= 0);
+	assert(loc.y < height);
+	if (board[loc.y*width + loc.x].obj == Board::Cell::Object::Empty)
+	{
+		return false;
+	}
+	else
+	{
+		Location _temp_loc;
+		do
+		{
+			std::uniform_int_distribution<int> xDist(0, width - 1);
+			std::uniform_int_distribution<int> yDist(0, height - 1);
+
+			_temp_loc = { xDist(rng), yDist(rng) };
+
+		} while (board[_temp_loc.y*width + _temp_loc.x].obj != Cell::Empty);
+
+		board[_temp_loc.y*width + _temp_loc.x].col = board[loc.y*width + loc.x].col;
+		board[_temp_loc.y*width + _temp_loc.x].obj = board[loc.y*width + loc.x].obj;
+		board[_temp_loc.y*width + _temp_loc.x].padding = board[loc.y*width + loc.x].padding;
+		board[loc.y*width + loc.x].col = NULL;
+		board[loc.y*width + loc.x].obj = Board::Cell::Object::Empty;
+		board[loc.y*width + loc.x].padding = NULL;
+		return true;
+	}
+}

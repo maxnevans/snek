@@ -6,7 +6,6 @@
 #include <random>
 #include <chrono>
 #include "Board.h"
-#include "Apple.h"
 
 class Snake
 {
@@ -27,14 +26,16 @@ public:
 	Snake(Board& brd, std::mt19937& rngs);
 	void Control(MainWindow& wnd);
 	void Update();
-	void Draw() const;
-	bool testCollisionSnake() const;
-	bool testCollisionBoard() const;
-	bool testCollisionApple() const;
-	void Respawn(const bool rand_pos);
+	const Board::Cell::Object& testCollision() const;
+	bool onBoard() const;
+	void Respawn(const bool rand_pos = false);
 	void Grow();
 	void EatYourself();
+	const Location& GetCurrentLocation() const;
+	void Pass() const;
+	void SpeedUp(const float spd_ratio);
 private:
+	void CleanTrack() const;
 	void UpdateDelta();
 	void InitializeTail();
 	void InitializeHead(const Location& loc);
@@ -46,8 +47,8 @@ private:
 	static constexpr int start_size = 3;
 	static constexpr float start_speed = 5.0f;;
 	static constexpr Color start_head_color = { 181,171,32 };
-	static constexpr int tail_draw_size = 2;
-	static constexpr int head_draw_size = 1;
+	static constexpr int tail_draw_size_padding = 2;
+	static constexpr int head_draw_size_padding = 1;
 	std::mt19937& rng;
 	Board& brd;
 	std::chrono::steady_clock::time_point update_rate;

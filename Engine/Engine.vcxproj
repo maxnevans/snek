@@ -136,7 +136,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Apple.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="ChiliException.h" />
     <ClInclude Include="ChiliWin.h" />
@@ -155,7 +154,6 @@
     <ClInclude Include="SoundEffect.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Apple.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="COMInitializer.cpp" />
     <ClCompile Include="DXErr.cpp" />
