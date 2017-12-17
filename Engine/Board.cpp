@@ -4,9 +4,8 @@
 Board::Board(Graphics& gfx)
 	:
 	gfx( gfx),
-	board(width*height)
+	board(width*height, Empty)
 {
-	InitBoard();
 }
 
 int Board::GetWidth() const
@@ -64,10 +63,3 @@ void Board::SetObj(const Location& loc, const Board::Object& obj)
 	board[loc.y*width + loc.x] = obj;
 }
 
-void Board::InitBoard()
-{
-	for (int i = 0; i < width*height; i++)
-	{
-		board[i] = Empty;
-	}
-}

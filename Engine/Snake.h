@@ -52,7 +52,6 @@ private:
 	Board& brd;
 	std::chrono::steady_clock::time_point update_rate;
 	std::vector<Segment> snake;
-	Segment* head;
 	Direction direction;
 	Direction _temp_direction;
 	Location delta;

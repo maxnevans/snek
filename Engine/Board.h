@@ -22,8 +22,6 @@ public:
 	int GetHeight() const;
 	const Object& testLocation(const Location& loc) const;
 private:
-	void InitBoard();
-private:
 	static constexpr int width = 39;
 	static constexpr int height = 29;
 	static constexpr Color borderColor = { 80,156,171 };

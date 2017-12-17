@@ -14,7 +14,6 @@ Snake::Snake(Board& brd, std::mt19937& rng)
 	brd ( brd ),
 	distance( 0 )
 {
-	head = &snake[0];
 	InitializeSnake();
 }
 
@@ -23,7 +22,7 @@ void Snake::InitializeTail()
 	std::uniform_int_distribution<int> colorDistG(100, 175);
 	for (int i = 1; i < snake.size(); i++)
 	{
-		snake[i].loc = head->loc;
+		snake[i].loc = snake[0].loc;
 		Color _temp(0, colorDistG(rng), 0);
 		snake[i].c = _temp;
 	}
@@ -31,8 +30,8 @@ void Snake::InitializeTail()
 
 void Snake::InitializeHead(const Location& loc)
 {
-	head->c = start_head_color;
-	head->loc = loc;
+	snake[0].c = start_head_color;
+	snake[0].loc = loc;
 }
 
 void Snake::InitializeSnake(const Location& loc)
@@ -104,7 +103,6 @@ void Snake::Grow()
 	Color _temp(0, colorDistG(rng), 0);
 	extra_block.c = _temp;
 	snake.push_back(extra_block);
-	head = &snake[0];
 }
 
 void Snake::Update()
@@ -142,17 +140,16 @@ void Snake::Respawn(const bool rand_pos)
 	}
 	_temp_direction = start_direction;
 	snake.resize(3);
-	head = &snake[0];
 	speed = start_speed;
 	distance = 0;
 }
 
 bool Snake::testCollision(const Board& brd) const
 {
-	return  !((head->loc.x >= 0) &&
-		(head->loc.x < brd.GetWidth()) &&
-		(head->loc.y >= 0) &&
-		(head->loc.y < brd.GetHeight()));
+	return  !((snake[0].loc.x >= 0) &&
+		(snake[0].loc.x < brd.GetWidth()) &&
+		(snake[0].loc.y >= 0) &&
+		(snake[0].loc.y < brd.GetHeight()));
 }
 
 void Snake::testCollision(const bool eat)
@@ -167,19 +164,18 @@ void Snake::testCollision(const bool eat)
 void Snake::EatYourself(const int wasEaten)
 {
 	snake.resize(wasEaten);
-	head = &snake[0];
 }
 
 bool Snake::testCollision(const Apple& apple) const
 {
-	return head->loc == apple.GetLocation();
+	return  apple.GetLocation() == snake[0].loc;
 }
 
 int Snake::isOnTheTail() const
 {
 	for (int i = 1; i < snake.size(); i++)
 	{
-		if (head->loc == snake[i].loc)
+		if (snake[0].loc == snake[i].loc)
 		{
 			return i;
 		}

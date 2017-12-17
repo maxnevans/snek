@@ -51,8 +51,8 @@ private:
 	/********************************/
 	std::chrono::steady_clock::time_point frame_time;
 	std::mt19937 rng;
+	std::uniform_int_distribution<int> xAppleDist, yAppleDist;
 	Board brd;
-	std::uniform_int_distribution<int> xAppleDist , yAppleDist;
 	Snake snake;	
 	Apple apple;
 };
