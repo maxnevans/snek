@@ -90,7 +90,10 @@ void Game::UpdateModel()
 				score = snake.EatYourself();
 			}
 
-			snake.Update();
+			if (!gameOver)
+			{
+				snake.Update();
+			}
 		}
 		else
 		{
