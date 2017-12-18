@@ -2,6 +2,7 @@
 #include "Board.h"
 #include <random>
 #include <chrono>
+#include <cassert>
 
 
 Snake::Snake(Board& brd, std::mt19937& rng)
@@ -9,10 +10,9 @@ Snake::Snake(Board& brd, std::mt19937& rng)
 	snake(start_size),
 	rng(rng),
 	update_rate(std::chrono::steady_clock::now()),
-	_temp_direction ( start_direction ),
+	_temp_delta ( start_direction ),
 	speed( start_speed ),
-	brd ( brd ),
-	distance( 0 )
+	brd ( brd )
 {
 	InitializeSnake();
 }
@@ -40,50 +40,24 @@ void Snake::InitializeSnake(const Location& loc)
 	InitializeTail();
 }
 
-void Snake::Control(MainWindow& wnd)
+void Snake::MoveByDelta(const Location& delta_loc)
 {
-	if (wnd.kbd.KeyIsPressed('W') && direction != dirDown)
+	assert(abs(delta_loc.y) + abs(delta_loc.x) == 1 );
+	if (delta_loc == Direction::Up && delta != Direction::Down
+		|| delta_loc == Direction::Down && delta != Direction::Up
+		|| delta_loc == Direction::Left && delta != Direction::Right
+		|| delta_loc == Direction::Right && delta != Direction::Left)
 	{
-		_temp_direction = dirUp;
+		_temp_delta = delta_loc;
 	}
-	else if (wnd.kbd.KeyIsPressed('S') && direction != dirUp)
-	{
-		_temp_direction = dirDown;
-	}
-	else if (wnd.kbd.KeyIsPressed('A') && direction != dirRight)
-	{
-		_temp_direction = dirLeft;
-	}
-	else if (wnd.kbd.KeyIsPressed('D') && direction != dirLeft)
-	{
-		_temp_direction = dirRight;
-	}
+	
 }
 
 void Snake::UpdateDelta()
 {
-	switch (_temp_direction)
-	{
-	case Snake::dirUp:
-		delta.x = 0;
-		delta.y = -1;
-		break;
-	case Snake::dirDown:
-		delta.x = 0;
-		delta.y = 1;
-		break;
-	case Snake::dirLeft:
-		delta.x = -1;
-		delta.y = 0;
-		break;
-	case Snake::dirRight:
-		delta.x = 1;
-		delta.y = 0;
-		break;
-	}
-	direction = _temp_direction;
+	delta = _temp_delta;
+	next_loc = snake.front().loc + delta;
 }
-
 
 void Snake::Grow()
 {
@@ -97,34 +71,22 @@ void Snake::Grow()
 
 void Snake::Update()
 {
-	CleanTrack();
 	std::chrono::duration<float> _update_rate = std::chrono::steady_clock::now() - update_rate;
 	float rate = _update_rate.count();
 	if (speed*rate > 1)
 	{
-		Snake::UpdateDelta();
-		brd.SetObj(snake.back().loc, brd.EmptyCell());
 		for (int i = (int)snake.size() - 1; i > 0; i--)
 		{
 			snake[i].loc = snake[i - 1].loc;
 		}
-		snake.front().loc += delta;
+		snake.front().loc = next_loc;
 		update_rate = std::chrono::steady_clock::now();
-		distance++;
 	}
-}
-
-void Snake::Pass() const
-{
-	for (const Segment& s : snake)
-	{
-		brd.SetObj(s.loc, { Board::Cell::Object::Snake, s.c, tail_draw_size_padding });
-	}
-	brd.SetObj(snake.front().loc, { Board::Cell::Object::Snake, snake.front().c, head_draw_size_padding });
 }
 
 void Snake::Respawn(const bool rand_pos)
 {
+	
 	if (rand_pos)
 	{
 		std::uniform_int_distribution<int> xDist(0, brd.GetWidth() - 1);
@@ -139,33 +101,26 @@ void Snake::Respawn(const bool rand_pos)
 	{
 		InitializeSnake();
 	}
-	_temp_direction = start_direction;
+	_temp_delta = start_direction;
 	snake.resize(3);
 	speed = start_speed;
-	distance = 0;
 }
 
 bool Snake::onBoard() const
 {
-	return  ((snake.front().loc.x >= 0) &&
-		(snake.front().loc.x < brd.GetWidth()) &&
-		(snake.front().loc.y >= 0) &&
-		(snake.front().loc.y < brd.GetHeight()));
+	return  (next_loc.x >= 0) &&
+		(next_loc.x < brd.GetWidth()) &&
+		(next_loc.y >= 0) &&
+		(next_loc.y < brd.GetHeight());
 }
-
-const Board::Cell::Object& Snake::testCollision() const
-{	
-	return brd.testLocation(snake.front().loc);
-}
-
 
 void Snake::EatYourself()
 {
-	for (int i = 1; i < snake.size(); i++)
+	for (int i = 0; i < snake.size() - 1; i++)
 	{
-		if (snake.front().loc == snake[i].loc)
+		if (next_loc == snake[i].loc)
 		{
-			snake.resize(i);
+			snake.resize(i + 1);
 			return;
 		}
 	}
@@ -174,9 +129,9 @@ void Snake::EatYourself()
 
 bool Snake::isOnTheTail() const
 {
-	for (int i = 1; i < snake.size(); i++)
+	for (int i = 0; i < snake.size() - 1; i++)
 	{
-		if (snake.front().loc == snake[i].loc)
+		if (next_loc == snake[i].loc)
 		{
 			return true;
 		}
@@ -184,20 +139,25 @@ bool Snake::isOnTheTail() const
 	return false;
 }
 
+const Location& Snake::GetNextLocation() const
+{
+	return next_loc;
+}
+
 const Location& Snake::GetCurrentLocation() const
 {
 	return snake.front().loc;
 }
-
-void Snake::CleanTrack() const
-{
-	for (const Segment& s : snake)
-	{
-		brd.SetObj(s.loc, brd.EmptyCell());
-	}
-}\
-
 void Snake::SpeedUp(const float spd_ratio)
 {
 	speed += spd_ratio;
+}
+
+void Snake::Draw() const
+{
+	for (const Segment& s : snake)
+	{
+		brd.DrawCell(s.loc, s.c, tail_draw_size_padding);
+	}
+	brd.DrawCell(snake.front().loc, snake.front().c, head_draw_size_padding);
 }

@@ -16,7 +16,6 @@ public:
 			Obstacle,
 			Poison,
 			size,
-			Snake,
 			Empty
 		};
 		Object obj;
@@ -27,7 +26,7 @@ public:
 	Board(Graphics& gfx, std::mt19937& rng);
 	void DrawBorder() const;
 	void Draw() const;
-	void SetObj(const Location& loc,const Cell& obj);
+	void DrawCell(const Location& loc,const Color& col, const int padding);
 	void SpawnObjects(const Cell::Object& what, const int howMany);
 	bool SpawnObject(const Cell::Object& what, const Location& loc);
 	bool RespawnObject(const Location& loc);
@@ -35,7 +34,6 @@ public:
 	int GetHeight() const;
 	const Cell::Object& testLocation(const Location& loc) const;
 	void Respawn();
-	const Cell& EmptyCell() const;
 private:
 	static constexpr int width = 39;
 	static constexpr int height = 27;

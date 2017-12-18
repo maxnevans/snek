@@ -327,7 +327,26 @@ void Graphics::DrawRect(int x, int y, int width, int height, Color c)
 	}
 }
 
-void Graphics::PrintDigit(int source, int x, int y, int size, Color c)
+void Graphics::PrintInt(const int what, const int x, const int y, const Color & col, const int size, const int padding)
+{
+	assert(what >= 0 && what <= std::numeric_limits<int>::max() );
+	int buffer[10];
+	int buff = what;
+	int i = 0;
+	while (buff /= 10 != 0)
+	{
+		buffer[i] = buff % 10;
+		i++;
+	}
+	buff = 0;
+	for (int j = i - 1; j >= 0; j++)
+	{
+		PrintDigit(buffer[j], x + buff*padding + buff*size*3 , y, size, col);
+		buff++;
+	}
+}
+
+void Graphics::PrintDigit(const int source,const int x,const int y,const int size,const Color& c)
 {
 	const int width = 3;
 	const int height = 5;

@@ -45,7 +45,7 @@ void Board::DrawBorder() const
 	}
 }
 
-void Board::Draw( ) const
+void Board::Draw() const
 {
 	for (int c = 0; c < board.size(); c++)
 	{ 
@@ -61,13 +61,11 @@ void Board::Draw( ) const
 	
 }
 
-void Board::SetObj(const Location& loc, const Board::Cell& obj)
+void Board::DrawCell(const Location& loc, const Color& col, const int padding)
 {
-	assert(loc.x >= 0);
-	assert(loc.x < width);
-	assert(loc.y >= 0);
-	assert(loc.y < height);
-	board[loc.y*width + loc.x] = obj;
+	gfx.DrawRect(loc.x*dim + leftPadding + borderThickness + borderPadding + padding,
+		loc.y*dim + topPadding + borderThickness + borderPadding + padding, dim - padding * 2,
+		dim - padding * 2, col);
 }
 
 void Board::SpawnObjects(const Board::Cell::Object& what,const int howMany)
@@ -152,9 +150,4 @@ void Board::Respawn()
 	{
 		SpawnObjects(static_cast<Cell::Object> (obj), amount_objects[obj]);
 	}
-}
-
-const Board::Cell& Board::EmptyCell() const
-{
-	return empty_cell;
 }

@@ -16,6 +16,14 @@ public:
 	{
 		return Location({ x*multiplier, y*multiplier });
 	}
+	bool operator!=(const Location& loc) const
+	{
+		return (this->x != loc.x) || (this->y != loc.y);
+	}
+	Location operator+(const Location& loc) const
+	{
+		return { x + loc.x, y + loc.y };
+	}
 public:
 	int x;
 	int y;

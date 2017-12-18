@@ -49,34 +49,53 @@ void Game::UpdateModel()
 {
 	if (!gameOver)
 	{
-		snake.Control(wnd);
-		snake.Update();
-
-		if (!snake.onBoard())
+		if (wnd.kbd.KeyIsPressed('W'))
 		{
-			gameOver = true;
+			snake.MoveByDelta(Snake::Direction::Up);
+		} 
+		else if (wnd.kbd.KeyIsPressed('S'))
+		{
+			snake.MoveByDelta(Snake::Direction::Down);
 		}
-		else
+		else if (wnd.kbd.KeyIsPressed('A'))
 		{
-			switch (snake.testCollision())
+			snake.MoveByDelta(Snake::Direction::Left);
+		}
+		else if (wnd.kbd.KeyIsPressed('D'))
+		{
+			snake.MoveByDelta(Snake::Direction::Right);
+		}
+		snake.UpdateDelta();
+		if (snake.onBoard())
+		{
+			switch (brd.testLocation(snake.GetCurrentLocation()))
 			{
 			case Board::Cell::Apple:
 				snake.Grow();
 				score++;
 				brd.RespawnObject(snake.GetCurrentLocation());
 				break;
-			case Board::Cell::Obstacle:
-				gameOver = true;
-				break;
 			case Board::Cell::Poison:
 				snake.SpeedUp(poison_acceleration_ratio);
 				brd.RespawnObject(snake.GetCurrentLocation());
 				break;
-			case Board::Cell::Snake:
-				snake.EatYourself();
-				break;
 			}
-			snake.Pass();
+
+			if (brd.testLocation(snake.GetNextLocation()) == Board::Cell::Obstacle)
+			{
+				gameOver = true;
+			}
+
+			if (snake.isOnTheTail())
+			{
+				snake.EatYourself();
+			}
+
+			snake.Update();
+		}
+		else
+		{
+			gameOver = true;
 		}
 	}
 	else if (wnd.kbd.KeyIsPressed('R'))
@@ -92,7 +111,8 @@ void Game::ComposeFrame()
 {
 	brd.DrawBorder();
 	brd.Draw();
-	PrintScore(40,0);
+	snake.Draw();
+	PrintScore(50,0);
 	ShowFPS();
 }
 
@@ -115,21 +135,5 @@ void Game::ShowFPS()
 		i -= 8;;
 		gfx.PrintDigit(time_frame % 10, 790 + i, 40, 2, Colors::Green);
 		time_frame /= 10;
-	}
-}
-
-void Game::PrintScore(const int x, const int y)
-{
-	int i = 0;
-	int buff = score;
-	if (buff == 0)
-	{
-		gfx.PrintDigit(buff, x + i, y + 10, 4, { 255,255,255 });
-	}
-	while ((buff != 0))
-	{
-		i -= 15;;
-		gfx.PrintDigit(buff % 10, x + i, y + 10, 4, { 255,255,255 });
-		buff /= 10;
 	}
 }

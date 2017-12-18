@@ -54,8 +54,8 @@ private:
 	static constexpr int amount_apples = 3;
 	static constexpr int amount_obstacles = 5;
 	static constexpr int amount_poison = 200;
-	static constexpr float poison_acceleration_ratio = 0.5f;
-	int score = 0;
+	static constexpr float poison_acceleration_ratio = 0.05f;
+	int score = 999;
 	bool gameOver = false;
 	std::mt19937 rng;
 	Board brd;
