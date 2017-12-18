@@ -11,6 +11,7 @@ Snake::Snake(Board& brd, std::mt19937& rng)
 	rng(rng),
 	update_rate(std::chrono::steady_clock::now()),
 	_temp_delta ( start_direction ),
+	next_loc(start_location + _temp_delta),
 	speed( start_speed ),
 	brd ( brd )
 {
@@ -55,8 +56,15 @@ void Snake::MoveByDelta(const Location& delta_loc)
 
 void Snake::UpdateDelta()
 {
-	delta = _temp_delta;
-	next_loc = snake.front().loc + delta;
+	std::chrono::duration<float> _update_rate = std::chrono::steady_clock::now() - update_rate;
+	float rate = _update_rate.count();
+	if (speed*rate > 1)
+	{
+		delta = _temp_delta;
+		next_loc = snake.front().loc + delta;
+		update_rate = std::chrono::steady_clock::now();
+		deltaUpdated = true;
+	}
 }
 
 void Snake::Grow()
@@ -71,16 +79,14 @@ void Snake::Grow()
 
 void Snake::Update()
 {
-	std::chrono::duration<float> _update_rate = std::chrono::steady_clock::now() - update_rate;
-	float rate = _update_rate.count();
-	if (speed*rate > 1)
+	if (deltaUpdated)
 	{
 		for (int i = (int)snake.size() - 1; i > 0; i--)
 		{
 			snake[i].loc = snake[i - 1].loc;
 		}
 		snake.front().loc = next_loc;
-		update_rate = std::chrono::steady_clock::now();
+		deltaUpdated = false;
 	}
 }
 
@@ -114,22 +120,22 @@ bool Snake::onBoard() const
 		(next_loc.y < brd.GetHeight());
 }
 
-void Snake::EatYourself()
+int Snake::EatYourself()
 {
-	for (int i = 0; i < snake.size() - 1; i++)
+	for (int i = 1; i < snake.size() - 1; i++)
 	{
 		if (next_loc == snake[i].loc)
 		{
 			snake.resize(i + 1);
-			return;
+			return i;
 		}
 	}
-	
+	return -1;
 }
 
 bool Snake::isOnTheTail() const
 {
-	for (int i = 0; i < snake.size() - 1; i++)
+	for (int i = 1; i < snake.size() - 1; i++)
 	{
 		if (next_loc == snake[i].loc)
 		{

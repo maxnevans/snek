@@ -43,7 +43,6 @@ private:
 	/*  User Functions              */
 	/********************************/
 	void ShowFPS();
-	void PrintScore(const int x, const int y);
 private:
 	MainWindow& wnd;
 	Graphics gfx;
@@ -55,7 +54,8 @@ private:
 	static constexpr int amount_obstacles = 5;
 	static constexpr int amount_poison = 200;
 	static constexpr float poison_acceleration_ratio = 0.05f;
-	int score = 999;
+	static constexpr Color score_color = { 214,17,73 };
+	int score = 0;
 	bool gameOver = false;
 	std::mt19937 rng;
 	Board brd;

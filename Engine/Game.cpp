@@ -22,6 +22,7 @@
 #include "Game.h"
 #include "Colors.h"
 #include "Snake.h"
+#include <assert.h>
 
 Game::Game( MainWindow& wnd )
 	:
@@ -68,27 +69,25 @@ void Game::UpdateModel()
 		snake.UpdateDelta();
 		if (snake.onBoard())
 		{
-			switch (brd.testLocation(snake.GetCurrentLocation()))
+			switch (brd.testLocation(snake.GetNextLocation()))
 			{
 			case Board::Cell::Apple:
 				snake.Grow();
 				score++;
-				brd.RespawnObject(snake.GetCurrentLocation());
+				brd.RespawnObject(snake.GetNextLocation());
 				break;
 			case Board::Cell::Poison:
 				snake.SpeedUp(poison_acceleration_ratio);
-				brd.RespawnObject(snake.GetCurrentLocation());
+				brd.RespawnObject(snake.GetNextLocation());
 				break;
-			}
-
-			if (brd.testLocation(snake.GetNextLocation()) == Board::Cell::Obstacle)
-			{
+			case Board::Cell::Obstacle:
 				gameOver = true;
+				break;
 			}
 
 			if (snake.isOnTheTail())
 			{
-				snake.EatYourself();
+				score = snake.EatYourself();
 			}
 
 			snake.Update();
@@ -112,7 +111,7 @@ void Game::ComposeFrame()
 	brd.DrawBorder();
 	brd.Draw();
 	snake.Draw();
-	PrintScore(50,0);
+	gfx.PrintInt(score, 0, 0, score_color, 4, 3);
 	ShowFPS();
 }
 

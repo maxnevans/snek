@@ -29,7 +29,7 @@ public:
 	bool onBoard() const;
 	void Respawn(const bool rand_pos = false);
 	void Grow();
-	void EatYourself();
+	int EatYourself();
 	const Location& GetNextLocation() const;
 	const Location& Snake::GetCurrentLocation() const;
 	void SpeedUp(const float spd_ratio);
@@ -49,6 +49,7 @@ private:
 	static constexpr Color start_head_color = { 181,171,32 };
 	static constexpr int tail_draw_size_padding = 2;
 	static constexpr int head_draw_size_padding = 1;
+	bool deltaUpdated = false;
 	std::mt19937& rng;
 	Board& brd;
 	std::chrono::steady_clock::time_point update_rate;
