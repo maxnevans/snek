@@ -27,7 +27,8 @@
 #include <random>
 #include "Board.h"
 #include "Snake.h"
-#include <vector>
+#include "ConfigParser.h"
+#include "StartData.h"
 
 class Game
 {
@@ -42,6 +43,7 @@ private:
 	/********************************/
 	/*  User Functions              */
 	/********************************/
+private:
 	void ShowFPS();
 private:
 	MainWindow& wnd;
@@ -50,14 +52,11 @@ private:
 	/*  User Variables              */
 	/********************************/
 	std::chrono::steady_clock::time_point frame_time;
-	static constexpr int amount_apples = 3;
-	static constexpr int amount_obstacles = 5;
-	static constexpr int amount_poison = 200;
-	static constexpr float poison_acceleration_ratio = 0.05f;
-	static constexpr Color score_color = { 214,17,73 };
-	int score = 0;
+	const char* config_file_name = "config.txt";
+	ConfigParser config_txt;
+	StartData  start_data;
 	bool gameOver = false;
 	std::mt19937 rng;
 	Board brd;
-	Snake snake;	
+	Snake snake;
 };

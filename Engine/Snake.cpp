@@ -3,19 +3,21 @@
 #include <random>
 #include <chrono>
 #include <cassert>
+#include <fstream>
 
 
-Snake::Snake(Board& brd, std::mt19937& rng)
+Snake::Snake(Board& brd, std::mt19937& rng,const Snake::StartData start_data)
 	:
-	snake(start_size),
+	start_data( start_data ),
+	snake(start_data.size),
 	rng(rng),
 	update_rate(std::chrono::steady_clock::now()),
-	_temp_delta ( start_direction ),
-	next_loc(start_location + _temp_delta),
-	speed( start_speed ),
+	_temp_delta ( start_data.direction ),
+	next_loc(start_data.location + _temp_delta),
+	speed( start_data.speed ),
 	brd ( brd )
 {
-	InitializeSnake();
+	InitializeSnake(start_data.location);
 }
 
 void Snake::InitializeTail()
@@ -31,7 +33,7 @@ void Snake::InitializeTail()
 
 void Snake::InitializeHead(const Location& loc)
 {
-	snake.front().c = start_head_color;
+	snake.front().c = start_data.head_color;
 	snake.front().loc = loc;
 }
 
@@ -105,11 +107,11 @@ void Snake::Respawn(const bool rand_pos)
 	}
 	else
 	{
-		InitializeSnake();
+		InitializeSnake(start_data.location);
 	}
-	_temp_delta = start_direction;
+	_temp_delta = start_data.direction;
 	snake.resize(3);
-	speed = start_speed;
+	speed = start_data.speed;
 }
 
 bool Snake::onBoard() const
@@ -154,6 +156,7 @@ const Location& Snake::GetCurrentLocation() const
 {
 	return snake.front().loc;
 }
+
 void Snake::SpeedUp(const float spd_ratio)
 {
 	speed += spd_ratio;
@@ -163,7 +166,7 @@ void Snake::Draw() const
 {
 	for (const Segment& s : snake)
 	{
-		brd.DrawCell(s.loc, s.c, tail_draw_size_padding);
+		brd.DrawCell(s.loc, s.c, start_data.tail_draw_size_padding);
 	}
-	brd.DrawCell(snake.front().loc, snake.front().c, head_draw_size_padding);
+	brd.DrawCell(snake.front().loc, snake.front().c, start_data.head_draw_size_padding);
 }

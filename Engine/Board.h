@@ -15,15 +15,28 @@ public:
 			Apple,
 			Obstacle,
 			Poison,
-			size,
 			Empty
 		};
 		Object obj;
 		Color col;
 		int padding;
 	};
+	struct StartData
+	{
+		int width;
+		int height;
+		Color borderColor;
+		int borderPadding;
+		int borderThickness;
+		int dim;
+		Color contentsColors[Cell::Object::Empty];
+		int contentsPadding[Cell::Object::Empty];
+	};
 public:
-	Board(Graphics& gfx, std::mt19937& rng);
+	Board(Graphics& gfx, std::mt19937& rng, const StartData& start_data);
+	Board& operator=(const Board& source) = delete;
+	Board(const Board& source) = delete;
+	~Board();
 	void DrawBorder() const;
 	void Draw() const;
 	void DrawCell(const Location& loc,const Color& col, const int padding);
@@ -35,21 +48,12 @@ public:
 	const Cell::Object& testLocation(const Location& loc) const;
 	void Respawn();
 private:
-	static constexpr int width = 39;
-	static constexpr int height = 27;
-	static constexpr Color borderColor = { 80,156,171 };
-	static constexpr int borderPadding = 2;
-	static constexpr int borderThickness = 5;
-	static constexpr int leftPadding = 3;
-	static constexpr int topPadding = 43;
-	static constexpr int dim = 20;
-	static constexpr Color contentsColors[] = {{ 214,17,73 },
-											   { 166,177,184 },
-											   { 78,0,104 }};
-	static constexpr int contentsPadding[] = {0 , 0 , 0};
+	int leftPadding;
+	int topPadding;
+	StartData start_data;
 	static constexpr Cell empty_cell = { Cell::Empty, NULL, NULL };
 	std::vector<int> amount_objects;
 	Graphics& gfx;
 	std::mt19937& rng;
-	std::vector<Cell> board;
+	Cell* board = nullptr;
 };

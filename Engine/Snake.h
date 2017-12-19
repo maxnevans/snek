@@ -16,6 +16,16 @@ private:
 		Color c;
 	};
 public:
+	struct StartData
+	{
+		Location location;
+		Location direction;
+		int size;
+		float speed;
+		Color head_color;
+		int tail_draw_size_padding;
+		int head_draw_size_padding;
+	};
 	struct Direction
 	{
 		static constexpr Location Up = {0, -1};
@@ -24,7 +34,7 @@ public:
 		static constexpr Location Right = {1, 0};
 	};
 public:
-	Snake(Board& brd, std::mt19937& rngs);
+	Snake(Board& brd, std::mt19937& rng,const StartData start_data);
 	void Update();
 	bool onBoard() const;
 	void Respawn(const bool rand_pos = false);
@@ -40,15 +50,9 @@ public:
 private:
 	void InitializeTail();
 	void InitializeHead(const Location& loc);
-	void InitializeSnake(const Location& loc = start_location);
+	void InitializeSnake(const Location& loc);
 private:
-	static constexpr Location start_location = {0,0};
-	static constexpr Location start_direction = Direction::Right;
-	static constexpr int start_size = 3;
-	static constexpr float start_speed = 5.0f;;
-	static constexpr Color start_head_color = { 181,171,32 };
-	static constexpr int tail_draw_size_padding = 2;
-	static constexpr int head_draw_size_padding = 1;
+	const StartData start_data;
 	bool deltaUpdated = false;
 	std::mt19937& rng;
 	Board& brd;

@@ -30,12 +30,14 @@ Game::Game( MainWindow& wnd )
 	gfx( wnd ),
 	rng( std::random_device()() ),
 	frame_time(std::chrono::steady_clock::now()),
-	brd ( gfx, rng ),
-	snake(brd,rng)
+	config_txt(config_file_name),
+	start_data(config_txt.getGameData()),
+	brd ( gfx, rng, config_txt.getBoardData()),
+	snake(brd,rng, config_txt.getSnakeData())
 {
-	brd.SpawnObjects(Board::Cell::Apple, amount_apples);
-	brd.SpawnObjects(Board::Cell::Obstacle, amount_obstacles);
-	brd.SpawnObjects(Board::Cell::Poison, amount_poison);
+	brd.SpawnObjects(Board::Cell::Apple, start_data.amount_apples);
+	brd.SpawnObjects(Board::Cell::Obstacle, start_data.amount_obstacles);
+	brd.SpawnObjects(Board::Cell::Poison, start_data.amount_poison);
 }
 
 void Game::Go()
@@ -73,11 +75,11 @@ void Game::UpdateModel()
 			{
 			case Board::Cell::Apple:
 				snake.Grow();
-				score++;
+				start_data.score++;
 				brd.RespawnObject(snake.GetNextLocation());
 				break;
 			case Board::Cell::Poison:
-				snake.SpeedUp(poison_acceleration_ratio);
+				snake.SpeedUp(start_data.poison_acceleration_ratio);
 				brd.RespawnObject(snake.GetNextLocation());
 				break;
 			case Board::Cell::Obstacle:
@@ -87,7 +89,7 @@ void Game::UpdateModel()
 
 			if (snake.isOnTheTail())
 			{
-				score = snake.EatYourself();
+				start_data.score = snake.EatYourself();
 			}
 
 			if (!gameOver)
@@ -102,7 +104,7 @@ void Game::UpdateModel()
 	}
 	else if (wnd.kbd.KeyIsPressed('R'))
 	{
-		score = 0;
+		start_data.score = 0;
 		gameOver = false;
 		snake.Respawn();
 		brd.Respawn();
@@ -114,7 +116,7 @@ void Game::ComposeFrame()
 	brd.DrawBorder();
 	brd.Draw();
 	snake.Draw();
-	gfx.PrintInt(score, 0, 0, score_color, 4, 3);
+	gfx.PrintInt(start_data.score, 0, 0, start_data.score_color, 4, 3);
 	ShowFPS();
 }
 

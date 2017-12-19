@@ -1,0 +1,43 @@
+[GAME]
+
+amount_apples = 13
+amount_obstacles = 20
+amount_poison = 240
+poison_acceleration_ratio = 0.05
+score_color = 214 17 73
+score = 0
+
+[END]
+
+
+
+[SNAKE]
+
+start_location = 0 0
+start_direction = right
+start_size = 3
+start_speed = 5.0
+head_color = 181 171 32
+tail_size = 3
+head_size = 2
+
+[END]
+
+
+
+[BOARD]
+
+width = 39
+height = 27
+border_color = 80 156 171
+border_padding = 2
+border_thickness = 5
+cell_size = 20
+apple_color = 214 17 73
+obstacle_color = 166 177 184
+poison_color = 78 0 104
+apple_size = 0
+obstacle_size = 0
+poison_size = 0
+
+[END]
