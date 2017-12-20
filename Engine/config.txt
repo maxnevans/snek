@@ -1,10 +1,17 @@
 [GAME]
 
+
+
 amount_apples = 13
 amount_obstacles = 20
 amount_poison = 240
+
+//can be a float number
 poison_acceleration_ratio = 0.05
+
+// R(0,255) G(0,255) B(0,255)
 score_color = 214 17 73
+
 score = 0
 
 [END]
@@ -16,8 +23,13 @@ score = 0
 start_location = 0 0
 start_direction = right
 start_size = 3
+
+//can be a float number
 start_speed = 5.0
+
+// R(0,255) G(0,255) B(0,255)
 head_color = 181 171 32
+
 tail_size = 3
 head_size = 2
 
@@ -27,17 +39,26 @@ head_size = 2
 
 [BOARD]
 
-width = 39
-height = 27
+// R(0,255) G(0,255) B(0,255)
 border_color = 80 156 171
-border_padding = 2
+
+width = 39
+height = 26
+border_padding = 5
 border_thickness = 5
 cell_size = 20
+
+// R(0,255) G(0,255) B(0,255)
 apple_color = 214 17 73
+
+// R(0,255) G(0,255) B(0,255)
 obstacle_color = 166 177 184
+
+// R(0,255) G(0,255) B(0,255)
 poison_color = 78 0 104
-apple_size = 0
-obstacle_size = 0
-poison_size = 0
+
+apple_size = 2
+obstacle_size = 2
+poison_size = 2
 
 [END]

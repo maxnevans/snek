@@ -112,61 +112,41 @@ void ConfigParser::parseGameData(const std::string& buffer)
 
 	if (var_name == "amount_apples")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 1)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 1)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_gm_data.amount_apples = std::stoi(data_from_string.front());
 	}
 	else if (var_name == "amount_obstacles")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 1)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 1)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_gm_data.amount_obstacles = std::stoi(data_from_string.front());
 	}
 	else if (var_name == "amount_poison")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 1)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 1)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_gm_data.amount_poison = std::stoi(data_from_string.front());
 	}
 	else if (var_name == "poison_acceleration_ratio")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 1)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 1)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_gm_data.poison_acceleration_ratio = std::stof(data_from_string.front());
 	}
 	else if (var_name == "score_color")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 3)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 3)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_gm_data.score_color.SetR(std::stoi(data_from_string[0]));
 		_gm_data.score_color.SetG(std::stoi(data_from_string[1]));
@@ -174,13 +154,9 @@ void ConfigParser::parseGameData(const std::string& buffer)
 	}
 	else if (var_name == "score")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 1)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 1)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_gm_data.score = std::stoi(data_from_string.front());
 	}
@@ -193,26 +169,18 @@ void ConfigParser::parseSnakeData(const std::string& buffer)
 
 	if (var_name == "start_location")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 2)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 2)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_snake_data.location.x = std::stoi(data_from_string[0]);
 		_snake_data.location.y = std::stoi(data_from_string[1]);
 	}
 	else if (var_name == "start_direction")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 1)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 1)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		std::string direction_def = data_from_string.front();
 
@@ -237,37 +205,25 @@ void ConfigParser::parseSnakeData(const std::string& buffer)
 	}
 	else if (var_name == "start_size")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 1)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 1)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_snake_data.size = std::stoi(data_from_string.front());
 	}
 	else if (var_name == "start_speed")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 1)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 1)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_snake_data.speed = std::stof(data_from_string.front());
 	}
 	else if (var_name == "head_color")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 3)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 3)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_snake_data.head_color.SetR(std::stoi(data_from_string[0]));
 		_snake_data.head_color.SetG(std::stoi(data_from_string[1]));
@@ -306,37 +262,25 @@ void ConfigParser::parseBoardData(const std::string & buffer)
 
 	if (var_name == "width")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 1)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 1)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_brd_data.width = std::stoi(data_from_string.front());
 	}
 	else if (var_name == "height")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 1)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 1)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_brd_data.height = std::stoi(data_from_string.front());
 	}
-	else if (var_name == "border_color ")
+	else if (var_name == "border_color")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 3)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 3)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_brd_data.borderColor.SetR(std::stoi(data_from_string[0]));
 		_brd_data.borderColor.SetG(std::stoi(data_from_string[1]));
@@ -344,49 +288,33 @@ void ConfigParser::parseBoardData(const std::string & buffer)
 	}
 	else if (var_name == "border_padding")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 1)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 1)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_brd_data.borderPadding = std::stoi(data_from_string.front());
 	}
 	else if (var_name == "border_thickness")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 1)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 1)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_brd_data.borderThickness = std::stoi(data_from_string.front());
 	}
 	else if (var_name == "cell_size")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 1)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 1)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_brd_data.dim = std::stoi(data_from_string.front());
 	}
 	else if (var_name == "apple_color")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 3)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 3)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_brd_data.contentsColors[0].SetR(std::stoi(data_from_string[0]));
 		_brd_data.contentsColors[0].SetG(std::stoi(data_from_string[1]));
@@ -394,13 +322,9 @@ void ConfigParser::parseBoardData(const std::string & buffer)
 	}
 	else if (var_name == "obstacle_color")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 3)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 3)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_brd_data.contentsColors[1].SetR(std::stoi(data_from_string[0]));
 		_brd_data.contentsColors[1].SetG(std::stoi(data_from_string[1]));
@@ -408,13 +332,9 @@ void ConfigParser::parseBoardData(const std::string & buffer)
 	}
 	else if (var_name == "poison_color")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 3)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 3)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_brd_data.contentsColors[2].SetR(std::stoi(data_from_string[0]));
 		_brd_data.contentsColors[2].SetG(std::stoi(data_from_string[1]));
@@ -422,37 +342,25 @@ void ConfigParser::parseBoardData(const std::string & buffer)
 	}
 	else if (var_name == "apple_size")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 1)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 1)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_brd_data.contentsPadding[0] = std::stoi(data_from_string.front());
 	}
 	else if (var_name == "obstacle_size")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 1)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 1)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_brd_data.contentsPadding[1] = std::stoi(data_from_string.front());
 	}
 	else if (var_name == "poison_size")
 	{
-		if (data_from_string.size() < 1)
+		if (data_from_string.size() != 1)
 		{
-			throw std::runtime_error("No data for " + var_name);
-		}
-		else if (data_from_string.size() > 1)
-		{
-			throw std::runtime_error("Too much data for " + var_name);
+			throw std::runtime_error("Invalid data for " + var_name);
 		}
 		_brd_data.contentsPadding[2] = std::stoi(data_from_string.front());
 	}

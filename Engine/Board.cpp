@@ -8,8 +8,8 @@ Board::Board(Graphics& gfx, std::mt19937& rng, const StartData& start_data)
 	start_data(start_data),
 	board(new Cell[start_data.width*start_data.height]),
 	amount_objects(Board::Cell::Object::Empty),
-	leftPadding( (gfx.ScreenWidth - start_data.borderPadding*2 - start_data.borderThickness*2 - start_data.width*start_data.dim)/2 - 1 ),
-	topPadding((gfx.ScreenHeight - start_data.borderPadding * 2 - start_data.borderThickness * 2 - start_data.height*start_data.dim) / 2 - 1)
+	leftPadding( (gfx.ScreenWidth - start_data.borderPadding*2 - start_data.borderThickness*2 - start_data.width*start_data.dim)/2 ),
+	topPadding((gfx.ScreenHeight - start_data.borderPadding * 2 - start_data.borderThickness * 2 - start_data.height*start_data.dim) / 2)
 {
 	for (int s = 0; s < start_data.width*start_data.height; s++)
 	{
@@ -96,7 +96,7 @@ void Board::SpawnObjects(const Board::Cell::Object& what,const int howMany)
 		} while (board[_temp_loc.y*start_data.width + _temp_loc.x].obj != Cell::Empty );
 		board[_temp_loc.y*start_data.width + _temp_loc.x].col = start_data.contentsColors[what];
 		board[_temp_loc.y*start_data.width + _temp_loc.x].obj = what;
-		board[_temp_loc.y*start_data.width + _temp_loc.x].padding = 0;
+		board[_temp_loc.y*start_data.width + _temp_loc.x].padding = start_data.contentsPadding[what];
 	}
 }
 

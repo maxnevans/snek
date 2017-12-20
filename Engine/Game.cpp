@@ -113,8 +113,8 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-	brd.DrawBorder();
 	brd.Draw();
+	brd.DrawBorder();
 	snake.Draw();
 	gfx.PrintInt(start_data.score, 0, 0, start_data.score_color, 4, 3);
 	ShowFPS();

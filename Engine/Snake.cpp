@@ -129,7 +129,7 @@ int Snake::EatYourself()
 		if (next_loc == snake[i].loc)
 		{
 			snake.resize(i + 1);
-			return i;
+			return i - start_data.size;
 		}
 	}
 	return -1;
