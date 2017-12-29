@@ -143,17 +143,20 @@
     <ClInclude Include="COMInitializer.h" />
     <ClInclude Include="ConfigParser.h" />
     <ClInclude Include="DXErr.h" />
+    <ClInclude Include="Font.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Location.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Mouse.h" />
+    <ClInclude Include="Rect.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Snake.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SoundEffect.h" />
     <ClInclude Include="StartData.h" />
+    <ClInclude Include="Surface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
@@ -168,6 +171,7 @@
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Snake.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="Surface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FramebufferPS.hlsl">
@@ -236,6 +240,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Chili.ico" />
+    <Image Include="Inconsolata-ASCII-BOLD.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="config.txt" />

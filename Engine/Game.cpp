@@ -23,6 +23,8 @@
 #include "Colors.h"
 #include "Snake.h"
 #include <assert.h>
+#include "Surface.h"
+#include "Rect.h"
 
 Game::Game( MainWindow& wnd )
 	:
@@ -33,11 +35,15 @@ Game::Game( MainWindow& wnd )
 	config_txt(config_file_name),
 	start_data(config_txt.getGameData()),
 	brd ( gfx, rng, config_txt.getBoardData()),
-	snake(brd,rng, config_txt.getSnakeData())
+	snake(brd,rng, config_txt.getSnakeData()),
+	font("Inconsolata-ASCII-BOLD.bmp"),
+	incon(&font, gfx)
 {
 	brd.SpawnObjects(Board::Cell::Apple, start_data.amount_apples);
 	brd.SpawnObjects(Board::Cell::Obstacle, start_data.amount_obstacles);
 	brd.SpawnObjects(Board::Cell::Poison, start_data.amount_poison);
+	font.SetChroma(Colors::White);
+	font.SetSubstituteColor(Colors::Gray);
 }
 
 void Game::Go()
@@ -50,73 +56,88 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	if (!gameOver)
+	if (!start)
 	{
-		if (wnd.kbd.KeyIsPressed('W'))
-		{
-			snake.MoveByDelta(Snake::Direction::Up);
-		} 
-		else if (wnd.kbd.KeyIsPressed('S'))
-		{
-			snake.MoveByDelta(Snake::Direction::Down);
-		}
-		else if (wnd.kbd.KeyIsPressed('A'))
-		{
-			snake.MoveByDelta(Snake::Direction::Left);
-		}
-		else if (wnd.kbd.KeyIsPressed('D'))
-		{
-			snake.MoveByDelta(Snake::Direction::Right);
-		}
-		snake.UpdateDelta();
-		if (snake.onBoard())
-		{
-			switch (brd.testLocation(snake.GetNextLocation()))
-			{
-			case Board::Cell::Apple:
-				snake.Grow();
-				start_data.score++;
-				brd.RespawnObject(snake.GetNextLocation());
-				break;
-			case Board::Cell::Poison:
-				snake.SpeedUp(start_data.poison_acceleration_ratio);
-				brd.RespawnObject(snake.GetNextLocation());
-				break;
-			case Board::Cell::Obstacle:
-				gameOver = true;
-				break;
-			}
 
-			if (snake.isOnTheTail())
-			{
-				start_data.score = snake.EatYourself();
-			}
-
-			if (!gameOver)
-			{
-				snake.Update();
-			}
-		}
-		else
-		{
-			gameOver = true;
-		}
 	}
-	else if (wnd.kbd.KeyIsPressed('R'))
+	else
 	{
-		start_data.score = 0;
-		gameOver = false;
-		snake.Respawn();
-		brd.Respawn();
+		if (!gameOver)
+		{
+			if (wnd.kbd.KeyIsPressed('W'))
+			{
+				snake.MoveByDelta(Snake::Direction::Up);
+			}
+			else if (wnd.kbd.KeyIsPressed('S'))
+			{
+				snake.MoveByDelta(Snake::Direction::Down);
+			}
+			else if (wnd.kbd.KeyIsPressed('A'))
+			{
+				snake.MoveByDelta(Snake::Direction::Left);
+			}
+			else if (wnd.kbd.KeyIsPressed('D'))
+			{
+				snake.MoveByDelta(Snake::Direction::Right);
+			}
+			snake.UpdateDelta();
+			if (snake.onBoard())
+			{
+				switch (brd.testLocation(snake.GetNextLocation()))
+				{
+				case Board::Cell::Apple:
+					snake.Grow();
+					start_data.score++;
+					brd.RespawnObject(snake.GetNextLocation());
+					break;
+				case Board::Cell::Poison:
+					snake.SpeedUp(start_data.poison_acceleration_ratio);
+					brd.RespawnObject(snake.GetNextLocation());
+					break;
+				case Board::Cell::Obstacle:
+					gameOver = true;
+					break;
+				}
+
+				if (snake.isOnTheTail())
+				{
+					start_data.score = snake.EatYourself();
+				}
+
+				if (!gameOver)
+				{
+					snake.Update();
+				}
+			}
+			else
+			{
+				gameOver = true;
+			}
+		}
+		else if (wnd.kbd.KeyIsPressed('R'))
+		{
+			start_data.score = 0;
+			gameOver = false;
+			snake.Respawn();
+			brd.Respawn();
+		}
 	}
 }
 
 void Game::ComposeFrame()
 {
-	brd.Draw();
-	brd.DrawBorder();
-	snake.Draw();
-	gfx.PrintInt(start_data.score, 0, 0, start_data.score_color, 4, 3);
+	if (!start)
+	{
+		incon.print("Hello world!\nTest123", { 0,0 }, Colors::Red, 10);
+		incon.print("Hello world!", { 100,100 }, Colors::Blue, 10);
+	}
+	else
+	{
+		brd.Draw();
+		brd.DrawBorder();
+		snake.Draw();
+		gfx.PrintInt(start_data.score, 0, 0, start_data.score_color, 4, 3);
+	}
 	ShowFPS();
 }
 

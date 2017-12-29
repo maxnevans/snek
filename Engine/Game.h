@@ -29,6 +29,8 @@
 #include "Snake.h"
 #include "ConfigParser.h"
 #include "StartData.h"
+#include "Surface.h"
+#include "Font.h"
 
 class Game
 {
@@ -56,7 +58,10 @@ private:
 	ConfigParser config_txt;
 	StartData  start_data;
 	bool gameOver = false;
+	bool start = false;
 	std::mt19937 rng;
 	Board brd;
 	Snake snake;
+	Surface font;
+	Font incon;
 };
