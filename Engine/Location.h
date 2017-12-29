@@ -1,34 +1,38 @@
 #pragma once
-class Location
+
+template<typename T>
+class _Location
 {
 public:
-	Location& operator+=(const Location& loc)
+	_Location& operator+=(const _Location& loc)
 	{
 		this->x += loc.x;
 		this->y += loc.y;
 		return *this;
 	}
-	bool operator==(const Location& loc) const
+	bool operator==(const _Location& loc) const
 	{
 		return (x == loc.x) && (y == loc.y);
 	}
-	Location operator*(const int multiplier) const
+	_Location operator*(const int multiplier) const
 	{
-		return Location({ x*multiplier, y*multiplier });
+		return _Location({ x*multiplier, y*multiplier });
 	}
-	bool operator!=(const Location& loc) const
+	bool operator!=(const _Location& loc) const
 	{
 		return (this->x != loc.x) || (this->y != loc.y);
 	}
-	Location operator+(const Location& loc) const
+	_Location operator+(const _Location& loc) const
 	{
 		return { x + loc.x, y + loc.y };
 	}
-	Location operator-(const Location& loc) const
+	_Location operator-(const _Location& loc) const
 	{
 		return {x - loc.x, y - loc.y};
 	}
 public:
-	int x;
-	int y;
+	T x;
+	T y;
 };
+
+typedef _Location<int> Location;
