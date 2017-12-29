@@ -37,7 +37,9 @@ Game::Game( MainWindow& wnd )
 	brd ( gfx, rng, config_txt.getBoardData()),
 	snake(brd,rng, config_txt.getSnakeData()),
 	font("Inconsolata-ASCII-BOLD.bmp"),
-	incon(&font, gfx)
+	incon(&font, gfx),
+	start_button_color(0x10222B),
+	score_button_color(0x10222B)
 {
 	brd.SpawnObjects(Board::Cell::Apple, start_data.amount_apples);
 	brd.SpawnObjects(Board::Cell::Obstacle, start_data.amount_obstacles);
@@ -58,6 +60,36 @@ void Game::UpdateModel()
 {
 	if (!start)
 	{
+		//Start button hover
+		if ((wnd.mouse.GetPosX() > 310) &&
+			(wnd.mouse.GetPosX() < 310 + 36 * 5) &&
+			(wnd.mouse.GetPosY() > 220) &&
+			(wnd.mouse.GetPosY() < 220 + 72))
+		{
+			if (wnd.mouse.LeftIsPressed())
+			{
+				start = true;
+			}
+			start_button_color = 0x29576E;
+		}
+		else
+		{
+			start_button_color = 0x10222B;
+		}
+
+
+		//Score button hover
+		if ((wnd.mouse.GetPosX() > 310) &&
+			(wnd.mouse.GetPosX() < 310 + 36 * 5) &&
+			(wnd.mouse.GetPosY() > 350) &&
+			(wnd.mouse.GetPosY() < 350 + 72))
+		{
+			score_button_color = 0x29576E;
+		}
+		else
+		{
+			score_button_color = 0x10222B;
+		}
 
 	}
 	else
@@ -120,6 +152,7 @@ void Game::UpdateModel()
 			gameOver = false;
 			snake.Respawn();
 			brd.Respawn();
+			start = false;
 		}
 	}
 }
@@ -128,8 +161,11 @@ void Game::ComposeFrame()
 {
 	if (!start)
 	{
-		incon.print("Hello world!\nTest123", { 0,0 }, Colors::Red, 10);
-		incon.print("Hello world!", { 100,100 }, Colors::Blue, 10);
+		gfx.DrawRect(0, 0, Graphics::ScreenWidth - 1, Graphics::ScreenHeight - 1, 0x95AB63);
+		gfx.DrawRect( 310, 220, 36*5, 72, start_button_color);
+		gfx.DrawRect( 310, 350, 36 * 5, 72, score_button_color);
+		incon.print("Start", { 310, 220 }, 0xE77F24, 10);
+		incon.print("Score", { 310, 350 }, 0xE77F24, 10);
 	}
 	else
 	{

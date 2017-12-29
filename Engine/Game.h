@@ -64,4 +64,6 @@ private:
 	Snake snake;
 	Surface font;
 	Font incon;
+	Color start_button_color;
+	Color score_button_color;
 };
