@@ -91,6 +91,14 @@ public:
 	{
 		dword = (dword & 0xFFFFFF00u) | b;
 	}
+	bool operator!=(const Color& col)
+	{
+		return dword != col.dword;
+	}
+	bool operator!=(const Color& col) const
+	{
+		return dword != col.dword;
+	}
 };
 
 namespace Colors
