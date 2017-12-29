@@ -57,9 +57,11 @@ private:
 	std::mt19937& rng;
 	Board& brd;
 	std::chrono::steady_clock::time_point update_rate;
+	float current_rate_time;
 	std::vector<Segment> snake;
 	Location _temp_delta;
 	Location delta;
 	Location next_loc;
+	Location past_loc;
 	float speed;
 };

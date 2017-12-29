@@ -14,6 +14,7 @@ Snake::Snake(Board& brd, std::mt19937& rng,const Snake::StartData start_data)
 	update_rate(std::chrono::steady_clock::now()),
 	_temp_delta ( start_data.direction ),
 	next_loc(start_data.location + _temp_delta),
+	past_loc(start_data.location),
 	speed( start_data.speed ),
 	brd ( brd )
 {
@@ -59,11 +60,12 @@ void Snake::MoveByDelta(const Location& delta_loc)
 void Snake::UpdateDelta()
 {
 	std::chrono::duration<float> _update_rate = std::chrono::steady_clock::now() - update_rate;
-	float rate = _update_rate.count();
-	if (speed*rate > 1)
+	current_rate_time = _update_rate.count();
+	if (speed*current_rate_time > 1)
 	{
 		delta = _temp_delta;
 		next_loc = snake.front().loc + delta;
+		past_loc = snake.back().loc;
 		update_rate = std::chrono::steady_clock::now();
 		deltaUpdated = true;
 	}
@@ -164,9 +166,10 @@ void Snake::SpeedUp(const float spd_ratio)
 
 void Snake::Draw() const
 {
-	for (const Segment& s : snake)
+	brd.DrawAnimatedMove(snake[1].loc, snake[0].loc, 1 / speed, current_rate_time, snake[0].c, start_data.head_draw_size_padding);
+	for (int i = 1; i < snake.size() - 1; i++)
 	{
-		brd.DrawCell(s.loc, s.c, start_data.tail_draw_size_padding);
+		brd.DrawAnimatedMove(snake[i + 1].loc,snake[i].loc, 1/speed , current_rate_time, snake[i].c, start_data.tail_draw_size_padding);
 	}
-	brd.DrawCell(snake.front().loc, snake.front().c, start_data.head_draw_size_padding);
+	brd.DrawAnimatedMove(past_loc, snake.back().loc, 1 / speed, current_rate_time, snake.back().c, start_data.tail_draw_size_padding);
 }

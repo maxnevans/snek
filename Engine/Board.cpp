@@ -1,5 +1,6 @@
 #include "Board.h"
 #include <assert.h>
+#include <chrono>
 
 Board::Board(Graphics& gfx, std::mt19937& rng, const StartData& start_data)
 	:
@@ -9,12 +10,14 @@ Board::Board(Graphics& gfx, std::mt19937& rng, const StartData& start_data)
 	board(new Cell[start_data.width*start_data.height]),
 	amount_objects(Board::Cell::Object::Empty),
 	leftPadding( (gfx.ScreenWidth - start_data.borderPadding*2 - start_data.borderThickness*2 - start_data.width*start_data.dim)/2 ),
-	topPadding((gfx.ScreenHeight - start_data.borderPadding * 2 - start_data.borderThickness * 2 - start_data.height*start_data.dim) / 2)
+	topPadding((gfx.ScreenHeight - start_data.borderPadding * 2 - start_data.borderThickness * 2 - start_data.height*start_data.dim) / 2),
+	tMark( std::chrono::steady_clock::now() )
 {
 	for (int s = 0; s < start_data.width*start_data.height; s++)
 	{
 		board[s] = empty_cell;
 	}
+	
 }
 
 Board::~Board()
@@ -73,11 +76,25 @@ void Board::Draw() const
 	
 }
 
-void Board::DrawCell(const Location& loc, const Color& col, const int padding)
+void Board::DrawCell(const Location& loc, const Color& col, const int padding) const
 {
 	gfx.DrawRect(loc.x*start_data.dim + leftPadding + start_data.borderThickness + start_data.borderPadding + padding,
 		loc.y*start_data.dim + topPadding + start_data.borderThickness + start_data.borderPadding + padding, start_data.dim - padding * 2,
 		start_data.dim - padding * 2, col);
+}
+
+void Board::DrawAnimatedMove(const Location& oLOC, const Location& nLOC, const float time, const float current_time, const Color& col, const int padding)
+{
+	if (current_time <= time)
+	{
+		Location _temp_loc = nLOC - oLOC;
+		float x_per_sec = _temp_loc.x*start_data.dim / time;
+		float y_per_sec = _temp_loc.y*start_data.dim / time;
+		gfx.DrawRect(oLOC.x*start_data.dim + int(x_per_sec*current_time) + padding + leftPadding + start_data.borderThickness + start_data.borderPadding,
+			oLOC.y*start_data.dim + int(y_per_sec*current_time) + padding + topPadding + start_data.borderThickness + start_data.borderPadding,
+			start_data.dim - padding * 2, start_data.dim - padding * 2, col);
+	}
+		
 }
 
 void Board::SpawnObjects(const Board::Cell::Object& what,const int howMany)
