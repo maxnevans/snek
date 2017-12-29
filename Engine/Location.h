@@ -24,6 +24,10 @@ public:
 	{
 		return { x + loc.x, y + loc.y };
 	}
+	Location operator-(const Location& loc) const
+	{
+		return {x - loc.x, y - loc.y};
+	}
 public:
 	int x;
 	int y;
